@@ -25,21 +25,21 @@ clear
 ## Removing the old docker packages
 yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
 
-## Installing the dependences 
+## Installing the dependences
 yum install -y yum-utils device-mapper-persistent-data lvm2 vim wget
 
 ## Installing the Docker Repository
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 ## Installing the Docker Pakages
-yum install docker-ce docker-ce-cli containerd.io
+yum install -y docker-ce docker-ce-cli containerd.io
 
 ## Check if docker was installed
 if [ -a "/bin/docker" ]; then
-  ## Enabling Docker on boot time 
+  ## Enabling Docker on boot time
   systemctl enable docker
 
-  ## Starting Docker 
+  ## Starting Docker
   systemctl start docker
 
   ## Getting the docker-compose
@@ -51,7 +51,7 @@ if [ -a "/bin/docker" ]; then
 
     ## Creating the link
     ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-  else 
+  else
     echo "Error > docker-compose was not downloaded. Please check your internet connection"
   fi
 
@@ -72,7 +72,7 @@ if [ -a "/bin/docker" ]; then
   ## Sending information about a not root user
   echo "If you are using the Docker with your own user added it to the docker group"
   echo "Use: usermod -aG docker douglas"
-else 
+else
   echo "Docker was not installed. Please Check the logs..." 1
 fi
 
