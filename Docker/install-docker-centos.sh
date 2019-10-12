@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------
-# ConfInicialCentOS6
+# install-docker-centos.sh
 #
 # Site	: https://github.com/douglasqsantos/DevOps
 # Author : Douglas Q. dos Santos <douglas.q.santos@gmail.com>
