@@ -19,7 +19,7 @@
 # Version 2:
 # Data: 13/10/2019
 # Description: Set up Docker and Docker Compose for:
-# CentOS 7/Debian 9-10/Ubuntu 16.04-19.04/Fedora 28-29
+# CentOS 7/Debian 9-10/Ubuntu 16.04-19.04/Fedora 28-30
 #
 #--------------------------------------------------------------------------
 #License: https://github.com/douglasqsantos/DevOps/blob/master/LICENSE
@@ -80,42 +80,72 @@ if [ -f "/etc/debian_version" ]; then
   if [ "${DEB_VARIANT}" == "Debian" ]; then
     DISTNAME="debian"
     DISTVER=$(lsb_release -r | awk '{print $2}')
+    CHECK_VER=$(echo ${DISTVER} | grep '.')
+    [ ! -z "${CHECK_VER}" ] && DISTVER=$(echo ${DISTVER} | cut -d '.' -f 1)
     if [ "${DISTVER}" -lt "9" ]; then
       msg_error "CHECK_VERSION > This version of Debian are not supported by this script..."
-    fi 
+    fi
   elif [ "${DEB_VARIANT}" == "Ubuntu" ]; then
     DISTNAME="ubuntu"
     DISTVER=$(lsb_release -r | awk '{print $2}')
     if [ "${DISTVER:0:2}" -lt "16" ]; then
-      msg_error "CHECK_VERSION > This version of Debian are not supported by this script..."
+      msg_error "CHECK_VERSION > This version of Ubuntu are not supported by this script..."
     fi 
   fi
   DOCKERCLI="/usr/bin/docker"
 elif [ -f "/etc/redhat-release" ]; then
-  CENTOS_VER=$(cat /etc/redhat-release | awk '{ print $4 }' | cut -d "." -f 1)
-  DOCKERCLI="/bin/docker"
+  if [ -f "/etc/fedora-release" ]; then
+    REDHAT_VARIANT="Fedora"
+    DISTNAME="fedora"
+    REPO_MGR="dnf config-manager"
+    PGK_MGR="dnf"
+    DISTVER=$(cat /etc/fedora-release | awk '{ print $3}')
+    DOCKERCLI="/usr/bin/docker"
+    if [ "${DISTVER}" -lt "28" ]; then
+      msg_error "CHECK_VERSION > This version of Fedora are not supported by this script..."
+    fi 
+  elif [ -f "/etc/centos-release" ]; then
+    REDHAT_VARIANT="CentOS"
+    DISTNAME="centos"
+    REPO_MGR="yum-config-manager"
+    PGK_MGR="yum"
+    DISTVER=$(cat /etc/centos-release | awk '{ print $4 }' | cut -d "." -f 1)
+    DOCKERCLI="/bin/docker"
+    if [ "${DISTVER}" -ne "7" ]; then
+      msg_error "CHECK_VERSION > This version of CentOS are not supported by this script..."
+    fi 
+  fi
 fi
 
-
-__install_on_centos(){
-  MSG_SECTION="Centos ${CENTOS_VER} > "
+## Function to handle the installation on Red Hat Base Systems
+__install_on_redhat_variants(){
+  MSG_SECTION="${REDHAT_VARIANT} ${DISTVER} > "
   ## Removing the old docker packages
   msg_ok "Removing the old docker packages"
-  yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+  if [ -f "/etc/centos-release" ]; then
+    yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+  else 
+    dnf remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
+  fi
 
   ## Installing the dependences
   msg_ok "Installing the dependences"
-  yum install -y yum-utils device-mapper-persistent-data lvm2 vim wget
+  if [ -f "/etc/centos-release" ]; then
+    yum install -y yum-utils device-mapper-persistent-data lvm2 vim wget
+  else
+    dnf -y install dnf-plugins-core vim
+  fi
 
   ## Installing the Docker Repository
   msg_ok "Installing the Docker Repository"
-  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  ${REPO_MGR} --add-repo https://download.docker.com/linux/${DISTNAME}/docker-ce.repo
 
   ## Installing the Docker Pakages
   msg_ok "Installing the Docker Pakages"
-  yum install -y docker-ce docker-ce-cli containerd.io
+  ${PGK_MGR} install -y docker-ce docker-ce-cli containerd.io
 }
 
+## Function to handle the installation on Debian Base Systems
 __install_on_debian_variants(){
    MSG_SECTION="${DEB_VARIANT} ${DISTVER} > "
   ## Removing the old docker packages
@@ -128,7 +158,7 @@ __install_on_debian_variants(){
 
   ## Installing the dependences
   msg_ok "Installing the dependences"
-  apt-get install -y apt-transport-https ca-certificates curl gnupg2 gnupg-agent software-properties-common
+  apt-get install -y apt-transport-https ca-certificates curl gnupg2 gnupg-agent software-properties-common vim
 
   ## Adding the gpg key for the docker repository 
   msg_ok "Adding the gpg key for the docker repository"
@@ -148,7 +178,7 @@ __install_on_debian_variants(){
 }
 
 ## Install on CentOS
-[ -f "/etc/redhat-release" ] && __install_on_centos
+[ -f "/etc/redhat-release" ] && __install_on_redhat_variants
 
 ## Install on Debian 
 [ -f "/etc/debian_version" ] && __install_on_debian_variants
