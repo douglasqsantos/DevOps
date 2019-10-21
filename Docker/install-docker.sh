@@ -131,9 +131,9 @@ __install_on_redhat_variants(){
   ## Installing the dependences
   msg_ok "Installing the dependences"
   if [ -f "/etc/centos-release" ]; then
-    yum install -y yum-utils device-mapper-persistent-data lvm2 vim wget
+    yum install -y yum-utils device-mapper-persistent-data lvm2 vim wget bash-completion
   else
-    dnf -y install dnf-plugins-core vim
+    dnf -y install dnf-plugins-core vim bash-completion
   fi
 
   ## Installing the Docker Repository
@@ -158,7 +158,7 @@ __install_on_debian_variants(){
 
   ## Installing the dependences
   msg_ok "Installing the dependences"
-  apt-get install -y apt-transport-https ca-certificates curl gnupg2 gnupg-agent software-properties-common vim
+  apt-get install -y apt-transport-https ca-certificates curl gnupg2 gnupg-agent software-properties-common vim bash-completion
 
   ## Adding the gpg key for the docker repository 
   msg_ok "Adding the gpg key for the docker repository"
