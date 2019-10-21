@@ -193,8 +193,13 @@ if [ -a "${DOCKERCLI}" ]; then
   msg_ok "Starting Docker"
   systemctl start docker
 
+  ## Getting the bash_completion for Docker
+  msg_ok "Docker > Getting the bash_completion"
+  curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
+
   ## Getting the docker-compose
   msg_ok "Docker-Compose > Getting the docker-compose"
+  [ -f "/etc/bash_completion.d/docker.sh" ] && cp -Rfa /etc/bash_completion.d/docker.sh{,.bkp}
   curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
   if [ -f "/usr/local/bin/docker-compose" ]; then
@@ -211,6 +216,10 @@ if [ -a "${DOCKERCLI}" ]; then
       rm -f /usr/bin/docker-compose
       ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     fi
+
+    msg_ok "Docker-Compose > Getting the bash_completion"
+    [ -f "/etc/bash_completion.d/docker-compose.sh" ] && cp -Rfa /etc/bash_completion.d/docker-compose.sh{,.bkp}
+    curl -L https://raw.githubusercontent.com/docker/compose/master/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose.sh
   else
     msg_error "Docker-Compose > Error > docker-compose was not downloaded. Please check your internet connection"
   fi
