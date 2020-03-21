@@ -35,7 +35,7 @@ services:
     build:
       context: jenkins-ansible/web
     ports:
-      - "80:80"
+      - "8088:80"
       - "443:443"
     networks:
       - net
@@ -48,7 +48,7 @@ services:
   #      external_url 'https://gitlab.dqs.com.br'
   #      # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - '8090:80'
+      - '80:80'
       - '8443:443'
       - '822:22'
     volumes:
