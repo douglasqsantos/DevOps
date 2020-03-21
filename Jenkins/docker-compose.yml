@@ -12,5 +12,17 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - net
+  gitlab:
+    container_name: gitlab
+    image: 'gitlab/gitlab-ce:latest'
+    hostname: 'gitlab.dqs.com.br'
+    ports:
+      - '80:80'
+    volumes:
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
+    networks:
+      - net
 networks:
   net:

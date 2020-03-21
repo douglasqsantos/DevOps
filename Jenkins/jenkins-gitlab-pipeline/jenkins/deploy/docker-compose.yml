@@ -1,0 +1,5 @@
+version: '3'
+services:
+  maven:
+    image: "$DOCKER_USER/$DOCKER_IMAGE:$DOCKER_TAG"
+    container_name: maven-app

@@ -2,6 +2,15 @@ pipeline {
 
     agent any
 
+
+    environment {
+        DOCKER_PASS = credentials('DOCKER_PASS')
+        DOCKER_USER = "$DOCKER_USER"
+        PROD_USER   = "$PROD_USER"
+        PROD_SERVER = "$PROD_SERVER"
+        PROD_KEY    = "$PROD_KEY"
+        }
+
     stages {
 
         stage('Build') {
@@ -11,13 +20,27 @@ pipeline {
                     ./jenkins/build/build.sh
                   '''
             }
+        post {
+                success {
+                   archiveArtifacts artifacts: 'java-app/target/*.jar', fingerprint: true
+                }
+            }
+
 
        }
+
 
         stage('Test') {
             steps {
                 sh './jenkins/test/mvn.sh mvn test'
             }
+        post {
+                always {
+                  junit 'java-app/target/surefire-reports/*.xml'
+                }
+            }
+
+
         }
 
         stage('Push') {
