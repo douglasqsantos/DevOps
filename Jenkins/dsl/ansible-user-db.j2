@@ -1,0 +1,27 @@
+
+job('ansible-users-db-dsl') {
+
+    description('Update the html table based on the input')
+
+
+    parameters {
+        choiceParam('PEOPLE_AGE', ['20', '21', '22', '23', '24', '25'])
+    }
+
+
+    steps {
+
+        wrappers {
+            colorizeOutput(colorMap = 'xterm')
+      }
+        ansiblePlaybook('/var/jenkins_home/ansible/people.yml'){
+            inventoryPath('/var/jenkins_home/ansible/hosts')
+            colorizedOutput(true)
+            extraVars {
+                extraVar("PEOPLE_AGE", '${PEOPLE_AGE}', false)
+            }
+        }
+    }
+
+}
+

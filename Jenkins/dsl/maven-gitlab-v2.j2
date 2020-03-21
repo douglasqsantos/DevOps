@@ -1,0 +1,39 @@
+// Maven Job
+job('maven_dsl') {
+
+    description('Maven dsl project')
+
+
+      scm {
+        git {
+            remote {
+                url('http://gitlab/jenkins/maven.git')
+                credentials('gitlab')
+            }
+             branch('master')
+
+        }
+    }
+
+
+    steps {
+        maven {
+            mavenInstallation('jenkins-maven')
+            goals('-B -DskipTests clean package')
+        }
+        maven {
+            mavenInstallation('jenkins-maven')
+            goals('test')
+        }
+        shell('''
+            echo ************RUNNING THE JAR************************
+            java -jar /var/jenkins_home/workspace/maven_dsl/target/my-app-1.0-SNAPSHOT.jar
+        ''')
+    }
+
+    publishers {
+        archiveArtifacts('target/*.jar')
+        archiveJunit('target/surefire-reports/*.xml')
+        mailer('douglas.q.santos@gmail.com', true, true)
+    }
+}

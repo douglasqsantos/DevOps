@@ -27,6 +27,6 @@ COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY ./bin/start.sh /start.sh
 
-RUN chmod +x /start.sh
+RUN chmod +x /start.sh && chown 1000:1000 -R /var/www/html
 
 CMD /start.sh
