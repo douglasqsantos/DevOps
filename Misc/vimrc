@@ -1,6 +1,6 @@
 "============= Color and configuration Schema ====================
 set background=dark    " Setting dark mode
-" colorscheme gruvbox
+colorscheme gruvbox
 syntax on
 
 set laststatus=2 " Show the status bar
