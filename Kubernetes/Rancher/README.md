@@ -1,8 +1,7 @@
-#!/bin/bash
-
 # Configuring Rancher with 3 Nodes
 
 ## NTP
+
 ```bash
 apt update && apt install ntpdate 
 ntpdate -u a.ntp.br 
