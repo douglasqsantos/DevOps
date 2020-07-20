@@ -3,37 +3,37 @@
 # https://rancher.com/docs/rke/latest/en/config-options/
 # https://rancher.com/docs/rke/latest/en/upgrades/
 nodes:
-  - address: 10.0.0.10
-    role: [controlplane, etcd, worker]
-    user: douglas
-    ssh_key_path: ./cluster-key
+- address: 10.0.0.10
+  role: [controlplane, etcd, worker]
+  user: douglas
+  ssh_key_path: ./cluster-key
+
+- address: 10.0.0.11
+  role: [controlplane, etcd, worker]
+  user: douglas
+  ssh_key_path: ./cluster-key
+
+- address: 10.0.0.12
+  role: [controlplane, etcd, worker]
+  user: douglas
+  ssh_key_path: ./cluster-key
   
-  - address: 10.0.0.11
-    role: [controlplane, etcd, worker]
-    user: douglas
-    ssh_key_path: ./cluster-key
-  
-  - address: 10.0.0.12
-    role: [controlplane, etcd, worker]
-    user: douglas
-    ssh_key_path: ./cluster-key
-  
-  services:
-    etcd:
-      snapshot: true
-      creation: 6h
-      retention: 24h
-      extra_args:
-        quota-backend-bytes: 7368709120
-    kubelet:
-      max-pods: 500
-    kube-api:
-      service_node_port_range: 30000-32767
-      always_pull_images: false
-  ignore_docker_version: true
-  cluster_name: k8s-rancher
-  # https://rancher.com/docs/rke/latest/en/upgrades/#listing-supported-kubernetes-versions
-  # rke config --list-version --all
-  kubernetes_version: v1.18.3-rancher2-2
-  ingress:
-      provider: none
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+    extra_args:
+      quota-backend-bytes: 7368709120
+  kubelet:
+    max-pods: 500
+  kube-api:
+    service_node_port_range: 30000-32767
+    always_pull_images: false
+ignore_docker_version: true
+cluster_name: k8s-rancher
+# https://rancher.com/docs/rke/latest/en/upgrades/#listing-supported-kubernetes-versions
+# rke config --list-version --all
+kubernetes_version: v1.18.3-rancher2-2
+ingress:
+    provider: none
