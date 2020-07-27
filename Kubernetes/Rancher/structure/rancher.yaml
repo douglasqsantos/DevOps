@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rancher
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rancher-manager
+  namespace: rancher
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: rancher-manager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: rancher-manager
+  namespace: rancher
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: rancher
+  name: rancher-stage
+  labels:
+    app: rancher-stage
+spec:
+  selector:
+    matchLabels:
+      app: rancher-stage
+  template:
+    metadata:
+      labels:
+        app: rancher-stage
+    spec:
+      nodeName: 10.0.0.10
+      serviceAccountName: rancher-manager
+      containers:
+      - name: rancher-stage
+        image: rancher/rancher:v2.4.5
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+          - name: rancher-data
+            mountPath: /var/lib/mysql
+      volumes:
+        - name: rancher-data
+          hostPath:
+            path: "/var/lib/docker/data/rancher"
+            type: DirectoryOrCreate
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: rancher
+  name: rancher-stage-service
+spec:
+  selector:
+    app: rancher-stage
+  ports:
+  - protocol: TCP
+    port: 443
+    nodePort: 30101
+    targetPort : 443
+  type: NodePort
