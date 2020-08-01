@@ -225,21 +225,9 @@ if [ -a "${DOCKERCLI}" ]; then
   fi
 
   # Backup the vimrc if exists
-  msg_ok "VIM > Backup the vimrc if exists"
-  [ -f "~/.vimrc" ] && mv ~/.vimrc ~/.vimrc.bkp
+  msg_ok "[+] VIM > Configuration"
+  curl -L https://raw.githubusercontent.com/douglasqsantos/DevOps/master/Misc/prep-vim.sh | bash
 
-  ## Getting the vim configuration
-  msg_ok "VIM > Getting the vim configuration"
-  curl -L https://raw.githubusercontent.com/douglasqsantos/DevOps/master/Misc/vimrc -o ~/.vimrc
-
-  ## Validating if the download is empty or not
-  if [ -s "~/.vimrc" ]; then
-    msg_warn "VIM > Rollback the vim configuration"
-    mv ~/.vimrc ~/.vimrc.bkp2
-    if [ -f "~/.vimrc.bkp" ]; then
-      mv ~/.vimrc.bkp ~/.vimrc
-    fi
-  fi
 
   ## Sending information about a not root user
   msg_ok "If you are using the Docker with your own user added it to the docker group"
