@@ -35,7 +35,7 @@ WHITE="\033[01;37m"
 CLOSE="\033[m"
 
 # Global Variables
-DOCKER_COMPOSE_VERSION="1.24.1"
+DOCKER_COMPOSE_VERSION="1.26.2"
 
 ## Functions to check
 __check_ok(){
