@@ -521,7 +521,7 @@ Now we need to create the file that will store the information about the node, w
 vim /var/lib/rundeck/nodes/debian10.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-   <node name="debian10" hostname="10.0.0.40" osArch="amd64" osFamily="unix" osName="Linux" osVersion="4.19.0-9-amd64" username="rundeck" sudo-command-enabled="true"/>
+   <node name="debian10" hostname="10.0.0.40" osArch="amd64" osFamily="unix" osName="Linux" osVersion="4.19.0-9-amd64" username="rundeck" />
 </project>
 ```
 
