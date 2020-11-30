@@ -339,7 +339,7 @@ apt install mysql-server-5.7 -y
 
 After install, run the  **mysql_secure_installation script**. This will let prompt you to set the root password for mysql, as well as disable anonymous access.
 
-Set an appropriate (innodb_buffer_pool_size)[https://dev.mysql.com/doc/refman/5.7/en/innodb-buffer-pool-resize.html]. MySQL, like many databases, manages its own page cache and the buffer pool size determines how much RAM it can use! Setting this to 80% of the system memory is the common wisdom for dedicated servers, however you may want go higher if your server has more than 32G of RAM.
+Set an appropriate [innodb_buffer_pool_size](https://dev.mysql.com/doc/refman/5.7/en/innodb-buffer-pool-resize.html). MySQL, like many databases, manages its own page cache and the buffer pool size determines how much RAM it can use! Setting this to 80% of the system memory is the common wisdom for dedicated servers, however you may want go higher if your server has more than 32G of RAM.
 
 Now you want to create a database and user access for the Rundeck server.
 
