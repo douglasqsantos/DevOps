@@ -71,3 +71,4 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 set ts=2
 set sts=2
 set et     "expand tabs to spaces
+set paste
